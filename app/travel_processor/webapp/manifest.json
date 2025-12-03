@@ -132,7 +132,25 @@
                             "enhanceI18n": "i18n/customTravel.properties",
                             "controlConfiguration": {
                                 "@com.sap.vocabularies.UI.v1.SelectionFields": {
-                                    "useSemanticDateRange": true
+                                    "useSemanticDateRange": true,
+                                    "filterFields": {
+                                        "to_Agency_AgencyID": {
+                                            "visualFilter": {
+                                                "valueList": "com.sap.vocabularies.Common.v1.ValueList#visualFilter"
+                                            }
+                                        },
+                                        "to_Customer_CustomerID": {
+                                            "visualFilter": {
+                                                "valueList": "com.sap.vocabularies.Common.v1.ValueList#visualFilter"
+                                            }
+                                        },
+                                        "BeginDate": {
+                                            "visualFilter": {
+                                                "valueList": "com.sap.vocabularies.Common.v1.ValueList#visualFilter"
+                                            }
+                                        }
+                                    },
+                                    "layout": "CompactVisual"
                                 },
                                 "@com.sap.vocabularies.UI.v1.LineItem": {
                                     "tableSettings": {
@@ -160,6 +178,23 @@
                                         "route": "TravelObjectPage"
                                     }
                                 }
+                            },
+                            "views": {
+                                "paths": [
+                                    {
+                                        "primary": [
+                                            {
+                                                "annotationPath": "com.sap.vocabularies.UI.v1.Chart#alpChart"
+                                            }
+                                        ],
+                                        "secondary": [
+                                            {
+                                                "annotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant"
+                                            }
+                                        ],
+                                        "defaultPath": "both"
+                                    }
+                                ]
                             }
                         }
                     }
@@ -222,7 +257,8 @@
                         }
                     }
                 }
-            }
+            },
+            "config": {}
         },
         "contentDensities": {
             "compact": true,
