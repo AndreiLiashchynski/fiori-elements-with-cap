@@ -1,0 +1,130 @@
+{
+  "name": "@capire/sflight",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CAP flight demo scenario",
+  "license": "SAP SAMPLE CODE LICENSE",
+  "repository": "https://github.com/SAP-samples/cap-sflight",
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "lint": "npx eslint .",
+    "start": "cds run",
+    "test": "jest",
+    "test:mocha": "npx mocha --timeout 20000",
+    "watch": "cds watch",
+    "watch-travel_processor": "cds watch --open sap.fe.cap.travel/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-customer": "cds watch --open sap.fe.cap.customer/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "undeploy": "cf undeploy capire.sflight --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+  },
+  "dependencies": {
+    "@sap/cds": "^8.9.7",
+    "@sap/cds-fiori": "^1.4.1",
+    "@sap/xssec": "^3.2.7",
+    "express": "^4",
+    "hdb": "^0.19.1",
+    "passport": "^0.6.0"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^8.9.11",
+    "@sap/ux-specification": "UI5-1.120",
+    "axios": "^0",
+    "cds-plugin-ui5": "^0.13.0",
+    "chai": "^4.3.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-subset": "^1.6.0",
+    "jest": "^28.1.0",
+    "mbt": "^1.2.29",
+    "qunit": "^2.9.3",
+    "rimraf": "^5.0.5"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sql"
+      },
+      "[production]": {
+        "db": {
+          "kind": "hana-cloud"
+        },
+        "auth": {
+          "kind": "xsuaa"
+        }
+      },
+      "[development]": {
+        "auth": {
+          "kind": "dummy-auth",
+          "users": {
+            "rose": {
+              "password": "rose",
+              "roles": []
+            },
+            "martha": {
+              "password": "martha",
+              "roles": [
+                "reviewer"
+              ]
+            },
+            "amy": {
+              "password": "amy",
+              "roles": [
+                "processor"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "log": {
+      "service": true
+    },
+    "features": {
+      "preserve_computed": true,
+      "odata_new_adapter": false
+    },
+    "build": {
+      "[node]": {
+        "target": "gen",
+        "tasks": [
+          {
+            "for": "node-cf"
+          },
+          {
+            "for": "hana"
+          }
+        ]
+      },
+      "[java]": {
+        "target": ".",
+        "tasks": [
+          {
+            "for": "java-cf"
+          }
+        ]
+      },
+      "[hana]": {
+        "target": "gen",
+        "tasks": [
+          {
+            "for": "hana"
+          }
+        ]
+      }
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 20000
+  },
+  "sapux": [
+    "app/travel_processor",
+    "app/customer"
+  ],
+  "workspaces": [
+    "app/*"
+  ]
+}
