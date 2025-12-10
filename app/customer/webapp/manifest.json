@@ -5,10 +5,12 @@
     "type": "application",
     "i18n": {
       "bundleName": "sap.fe.cap.customer.i18n.i18n",
-      "supportedLocales": ["en", ""],
+      "supportedLocales": [
+        "en",
+        ""
+      ],
       "fallbackLocale": "en"
     },
-
     "applicationVersion": {
       "version": "0.0.1"
     },
@@ -160,18 +162,18 @@
                 }
               },
               "content": {
-                 "header": {
-                    "facets": {
-                        "CustomHeaderFacetContentBased1": {
-                          "template": "sap.fe.cap.customer.ext.fragment.BookingStatus",
-                          "title": "{i18n>bookingStatus}",
-                          "visible": "true",
-                          "position": {
-                            "placement": "After",
-                            "anchor": "ContactDetails"
-                            }
-                          }
+                "header": {
+                  "facets": {
+                    "CustomHeaderFacetContentBased1": {
+                      "template": "sap.fe.cap.customer.ext.fragment.BookingStatus",
+                      "title": "{i18n>bookingStatus}",
+                      "visible": "true",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "ContactDetails"
                       }
+                    }
+                  }
                 },
                 "body": {
                   "sections": {

@@ -71,7 +71,7 @@
             "css": []
         },
         "dependencies": {
-            "minUI5Version": "1.120.11",
+            "minUI5Version": "1.136.9",
             "libs": {
                 "sap.ui.core": {},
                 "sap.fe.templates": {},
@@ -142,10 +142,29 @@
                             "controlConfiguration": {
                                 "@com.sap.vocabularies.UI.v1.SelectionFields": {
                                     "useSemanticDateRange": true
+                                },
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "actions": {
+                                        "Press": {
+                                            "press": ".extension.sap.fe.cap.travel.ext.controller.SetTransportationType.handleSetTransportationTypePress",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": true,
+                                            "text": "{i18n>setTransportationType}"
+                                        }
+                                    },
+                                    "columns": {
+                                        "TransportType1": {
+                                            "header": "{i18n>transportationType}",
+                                            "position": {
+                                                "anchor": "DataFieldForAnnotation::to_Agency::Contact::contact",
+                                                "placement": "After"
+                                            },
+                                            "template": "sap.fe.cap.travel.ext.fragment.TransportType"
+                                        }
+                                    }
                                 }
                             },
-                            "variantManagement": "Page",
-                            "initialLoad": "Enabled",
                             "navigation": {
                                 "Travel": {
                                     "detail": {
@@ -153,7 +172,9 @@
                                     }
                                 }
                             },
+                            "variantManagement": "Page",
                             "hideFilterBar": false,
+                            "initialLoad": "Enabled",
                             "views": {
                                 "paths": [
                                     {
@@ -252,7 +273,13 @@
         },
         "extends": {
             "extensions": {
-                "sap.ui.controllerExtensions": {}
+                "sap.ui.controllerExtensions": {
+                    "sap.fe.templates.ListReport.ListReportController": {
+                        "controllerNames": [
+                            "sap.fe.cap.travel.ext.controller.SetTransportationType"
+                        ]
+                    }
+                }
             }
         },
         "rootView": {
