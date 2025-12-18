@@ -1,8 +1,9 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core"
-    core:require="{ Formatter: 'sap/fe/cap/travel/formatter/formatter' }">
-
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
     <core:Icon
         id="TransportationIcon"
-        src="{ path: 'TransportationType', formatter: 'Formatter.transportationIcon' }"
+        src="{ 
+            path: 'TransportationType', 
+            formatter: 'Formatter.transportationIcon' 
+        }"
         tooltip="{TransportationType}" />
 </core:FragmentDefinition>

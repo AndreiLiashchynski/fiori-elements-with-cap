@@ -2,7 +2,6 @@ sap.ui.define([], function () {
     "use strict";
     return {
         transportationIcon: function (sType) {
-            console.log(sType)
             if (!sType) return "sap-icon://question-mark";
             switch (sType.toLowerCase()) {
                 case "train":
