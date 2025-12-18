@@ -60,7 +60,8 @@ service TravelService @(path: '/processor') {
       action deductDiscount(  @(UI.ParameterDefaultValue: 5)  percent: Percentage not null  @mandatory  ) returns Travel;
     };
 
-  action   assignTransportationType(TravelUUIDs: array of UUID, transportationtype: String(40));
+  @Common.SideEffects: {TargetEntities: ['/TravelService.EntityContainer/Travel']}
+  action   assignTransportationType(TravelUUIDs: array of UUID, TransportationType: String(40));
 
   // Function import used in Controller Extension 'PassengerOPExtend.js' to calculate booking data
   function getBookingDataOfPassenger(CustomerID: String) returns my.BookingData;

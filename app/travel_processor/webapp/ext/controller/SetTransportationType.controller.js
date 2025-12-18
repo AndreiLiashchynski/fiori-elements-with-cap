@@ -73,8 +73,6 @@ sap.ui.define([
             try {
                 await this._callAssignTransportationType(aUUIDs, sType);
 
-                const oBinding = oTable.getBinding("items");
-                oBinding.refresh();
 
                 MessageToast.show(this._getBundle().getText(messageKeys.SUCCESS_KEY_MESSAGE));
                 oDialog.close();

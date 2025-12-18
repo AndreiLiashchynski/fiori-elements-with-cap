@@ -160,6 +160,7 @@
                                                 "anchor": "DataFieldForAnnotation::to_Agency::Contact::contact",
                                                 "placement": "After"
                                             },
+                                            "availability": "Adaptation",
                                             "template": "sap.fe.cap.travel.ext.fragment.TransportType"
                                         }
                                     }

@@ -622,3 +622,7 @@ annotate TravelService.Travel with {
     })
     to_Customer
 };
+
+annotate TravelService.Travel with {
+    TransportationType @UI.Hidden;
+};

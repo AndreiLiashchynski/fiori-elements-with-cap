@@ -192,13 +192,12 @@ class TravelService extends cds.ApplicationService {
     //
 
     this.on('assignTransportationType', async (req) => {
-      const { TravelUUIDs, transportationtype } = req.data;
+      const { TravelUUIDs, TransportationType } = req.data;
 
       const uuidsNoDash = TravelUUIDs.map(u => u.replace(/-/g, ''));
-      console.log(TravelUUIDs, transportationtype)
 
       await UPDATE(this.entities.Travel)
-        .set({ TransportationType: transportationtype })
+        .set({ TransportationType: TransportationType })
         .where({ TravelUUID: { in: uuidsNoDash } });
     });
 

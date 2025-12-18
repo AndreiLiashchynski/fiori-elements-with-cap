@@ -7,7 +7,7 @@ sap.ui.define([], function () {
         },
         PARAMETERS: {
             TRAVEL_UUIDS: "TravelUUIDs",
-            TRANSPORTATION_TYPE: "transportationtype"
+            TRANSPORTATION_TYPE: "TransportationType"
         }
     };
 });
