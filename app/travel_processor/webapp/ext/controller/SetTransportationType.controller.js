@@ -2,21 +2,17 @@ sap.ui.define([
     "sap/ui/core/mvc/ControllerExtension",
     "sap/ui/core/Fragment",
     "sap/m/MessageToast",
-    "sap/m/RadioButton",
-    "sap/fe/cap/travel/model/models",
-    "sap/fe/cap/travel/constants/modelConstants",
     "sap/fe/cap/travel/constants/dialogConstants",
     "sap/fe/cap/travel/formatter/formatter",
     "sap/fe/cap/travel/constants/messageKeys",
     "sap/fe/cap/travel/constants/actionConstants",
-], function (ControllerExtension, Fragment, MessageToast, RadioButton,
-    models, modelConstants, dialogConstants, formatter, messageKeys, actionConstants) {
+], function (ControllerExtension, Fragment, MessageToast,
+    dialogConstants, formatter, messageKeys, actionConstants) {
     "use strict";
 
     return ControllerExtension.extend("sap.fe.cap.travel.ext.controller.SetTransportationType", {
 
         handleSetTransportationTypePress: function () {
-            const oTransportationOptionsModel = models.createTransportatioOptionsModel();
             this._i18nModel = this.getView().getModel("i18n");
 
             if (!this._oDialog) {
@@ -25,13 +21,12 @@ sap.ui.define([
                     name: dialogConstants.FRAGMENT_NAME,
                     controller: this
                 }).then(function (oDialog) {
-                    oDialog.setModel(oTransportationOptionsModel, modelConstants.TRANSPORTATION_MODEL_NAME);
+                    const oDataModel = this.getView().getModel();
+
+                    oDialog.setModel(oDataModel)
                     oDialog.setModel(this._i18nModel, "i18n");
 
-                    const oRadioGroup = Fragment.byId(dialogConstants.DIALOG_ID, dialogConstants.RADIO_GROUP_ID);
-
-                    this._createRadioButtons(oRadioGroup, oTransportationOptionsModel);
-                    this._attachButtonHandlers(oDialog, oRadioGroup);
+                    this._attachButtonHandlers(oDialog);
 
                     oDialog.open();
                     this._oDialog = oDialog;
@@ -41,28 +36,16 @@ sap.ui.define([
             }
         },
 
-        _createRadioButtons: function (oRadioGroup, oTransportationOptionsModel) {
-            const aOptions = oTransportationOptionsModel.getProperty("/options") || [];
-
-            aOptions.forEach(opt => {
-                const oRadioButton = new RadioButton({
-                    text: this._getBundle().getText(opt.textKey),
-                    id: opt.id
-                });
-                oRadioGroup.addButton(oRadioButton);
-            });
-        },
-
-        _attachButtonHandlers: function (oDialog, oRadioGroup) {
+        _attachButtonHandlers: function (oDialog) {
             const [btnSave, btnCancel] = oDialog.getButtons();
 
-            btnSave.attachPress(() => this._onSave(oDialog, oRadioGroup));
+            btnSave.attachPress(() => this._onSave(oDialog));
             btnCancel.attachPress(() => this._onCancel(oDialog));
         },
 
-        _onSave: async function (oDialog, oRadioGroup) {
-            const oSelected = oRadioGroup.getSelectedButton();
-            const sType = oSelected ? oSelected.getText() : "";
+        _onSave: async function (oDialog) {
+            const oMultiCombo = Fragment.byId(dialogConstants.DIALOG_ID, dialogConstants.MULTI_COMBO_ID);
+            const aSelectedTypes = oMultiCombo.getSelectedKeys();
 
             const oTable = sap.ui.getCore().byId(dialogConstants.TABLE_ID);
             const aContexts = oTable.getSelectedContexts();
@@ -71,8 +54,9 @@ sap.ui.define([
                 .map(formatter.formatUUID);
 
             try {
-                await this._callAssignTransportationType(aUUIDs, sType);
+                oTable.removeSelections(true);
 
+                await this._callAssignTransportationType(aUUIDs, aSelectedTypes);
 
                 MessageToast.show(this._getBundle().getText(messageKeys.SUCCESS_KEY_MESSAGE));
                 oDialog.close();
@@ -82,13 +66,13 @@ sap.ui.define([
             }
         },
 
-        _callAssignTransportationType: async function (aUUIDs, sType) {
+        _callAssignTransportationType: async function (aUUIDs, sTypes) {
             const oModel = this.getView().getModel();
             await this.base.getExtensionAPI().editFlow.invokeAction(actionConstants.ACTIONS.ASSIGN_TRANSPORTATION_TYPE, {
                 model: oModel,
                 parameterValues: [
                     { name: actionConstants.PARAMETERS.TRAVEL_UUIDS, value: aUUIDs },
-                    { name: actionConstants.PARAMETERS.TRANSPORTATION_TYPE, value: sType }
+                    { name: actionConstants.PARAMETERS.TRANSPORTATION_TYPE, value: sTypes }
                 ],
                 skipParameterDialog: true
             });

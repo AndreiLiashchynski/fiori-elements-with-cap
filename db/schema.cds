@@ -21,22 +21,36 @@ type BookingData : {
 }
 
 entity Travel : managed {
-  key TravelUUID         : UUID;
-      TravelID           : Integer                     @readonly default 0;
-      BeginDate          : Date;
-      EndDate            : Date;
-      BookingFee         : Decimal(16, 3);
-      TotalPrice         : Decimal(16, 3)              @readonly;
-      CurrencyCode       : Currency;
-      Progress           : Integer                     @readonly;
-      Description        : String(1024);
-      TransportationType : String(40);
-      TravelStatus       : Association to TravelStatus @readonly;
-      to_Agency          : Association to TravelAgency @assert.target;
-      to_Customer        : Association to Passenger;
-      to_Booking         : Composition of many Booking
-                             on to_Booking.to_Travel = $self;
+  key TravelUUID             : UUID;
+      TravelID               : Integer                     @readonly default 0;
+      BeginDate              : Date;
+      EndDate                : Date;
+      BookingFee             : Decimal(16, 3);
+      TotalPrice             : Decimal(16, 3)              @readonly;
+      CurrencyCode           : Currency;
+      Progress               : Integer                     @readonly;
+      Description            : String(1024);
+      TravelStatus           : Association to TravelStatus @readonly;
+      to_TransportationTypes : Composition of many Travel2TransportationType
+                                 on to_TransportationTypes.to_Travel = $self;
+      to_Agency              : Association to TravelAgency @assert.target;
+      to_Customer            : Association to Passenger;
+      to_Booking             : Composition of many Booking
+                                 on to_Booking.to_Travel = $self;
 };
+
+entity TransportationType : CodeList {
+  key code : String enum {
+        plane = 'plane';
+        train = 'train';
+        car = 'car';
+      };
+}
+
+entity Travel2TransportationType {
+  key to_Travel          : Association to Travel;
+  key transportationType : Association to TransportationType;
+}
 
 entity Booking : managed {
   key BookingUUID       : UUID;
