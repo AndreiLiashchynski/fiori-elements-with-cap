@@ -1,9 +1,13 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-    <core:Icon
-        id="TransportationIcon"
-        src="{ 
-            path: 'TransportationType', 
-            formatter: 'Formatter.transportationIcon' 
-        }"
-        tooltip="{TransportationType}" />
+    <HBox id="transportationTypesContainer" items="{
+        path: 'to_TransportationTypes',
+        templateShareable: false
+    }">
+        <items>
+            <core:Icon id="transportationTypeIcon"
+                src="{path: 'transportationType_code', formatter: 'Formatter.mapTransportCodeToIcon'}" 
+                class="sapUiTinyMarginEnd" 
+                tooltip="{transportationType_code}" />
+        </items>
+    </HBox>
 </core:FragmentDefinition>

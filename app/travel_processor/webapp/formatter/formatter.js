@@ -1,16 +1,14 @@
 sap.ui.define([], function () {
     "use strict";
     return {
-        transportationIcon: function (sType) {
-            if (!sType) return "sap-icon://question-mark";
-            switch (sType.toLowerCase()) {
-                case "train":
-                    return "sap-icon://cargo-train";
-                case "car":
-                    return "sap-icon://car-rental";
-                default:
-                    return "sap-icon://flight";
-            }
+        mapTransportCodeToIcon: function (sCode) {
+            const oMap = {
+                "plane": "sap-icon://flight",
+                "train": "sap-icon://cargo-train",
+                "car": "sap-icon://car-rental"
+            };
+
+            return oMap[sCode] || "sap-icon://question-mark";
         },
 
         formatUUID: function (uuid) {

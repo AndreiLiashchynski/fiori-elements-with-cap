@@ -6,7 +6,7 @@ class TravelService extends cds.ApplicationService {
     /**
      * Reflect definitions from the service's CDS model
      */
-    const { Travel, Booking, BookingSupplement } = this.entities
+    const { Travel, Booking, BookingSupplement, Travel2TransportationType } = this.entities
 
 
     /**
@@ -194,11 +194,25 @@ class TravelService extends cds.ApplicationService {
     this.on('assignTransportationType', async (req) => {
       const { TravelUUIDs, TransportationType } = req.data;
 
-      const uuidsNoDash = TravelUUIDs.map(u => u.replace(/-/g, ''));
+      const aCleanUUIDs = TravelUUIDs.map(id => id.replace(/-/g, ''));
+      await DELETE.from(Travel2TransportationType)
+        .where({ to_Travel_TravelUUID: { in: aCleanUUIDs } });
 
-      await UPDATE(this.entities.Travel)
-        .set({ TransportationType: TransportationType })
-        .where({ TravelUUID: { in: uuidsNoDash } });
+      const aEntries = [];
+      aCleanUUIDs.forEach(sTravelUUID => {
+        TransportationType.forEach(sCode => {
+          aEntries.push({
+            to_Travel_TravelUUID: sTravelUUID,
+            transportationType_code: sCode,
+          });
+        });
+      });
+
+      if (aEntries.length > 0) {
+        await INSERT.into(Travel2TransportationType).entries(aEntries);
+      }
+
+      return true;
     });
 
 

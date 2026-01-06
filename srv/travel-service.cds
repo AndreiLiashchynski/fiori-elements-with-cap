@@ -25,10 +25,13 @@ service TravelService @(path: '/processor') {
     }
   ])
 
-  entity SupplementScope as projection on my.SupplementScope;
+  entity SupplementScope           as projection on my.SupplementScope;
+
+  entity Travel2TransportationType as projection on my.Travel2TransportationType;
+  entity TransportationType        as projection on my.TransportationType;
 
   // Travel: To avoid number formatting of the travel ID, make it a String
-  entity Travel          as
+  entity Travel                    as
     projection on my.Travel {
       *,
       TravelID                                                                 : String  @readonly  @Common.Text: Description,
@@ -60,14 +63,19 @@ service TravelService @(path: '/processor') {
       action deductDiscount(  @(UI.ParameterDefaultValue: 5)  percent: Percentage not null  @mandatory  ) returns Travel;
     };
 
-  @Common.SideEffects: {TargetEntities: ['/TravelService.EntityContainer/Travel']}
-  action   assignTransportationType(TravelUUIDs: array of UUID, TransportationType: String(40));
+
+  annotate TravelService.assignTransportationType with @Common.SideEffects: {
+    TargetProperties: ['to_Travel/to_TransportationTypes'],
+    TargetEntities  : ['/TravelService.EntityContainer/Travel']
+  };
+
+  action   assignTransportationType(TravelUUIDs: array of UUID, TransportationType: array of String);
 
   // Function import used in Controller Extension 'PassengerOPExtend.js' to calculate booking data
   function getBookingDataOfPassenger(CustomerID: String) returns my.BookingData;
 
   // Passenger: Add joined property 'FullName' and association 'to_Booking'
-  entity Passenger       as
+  entity Passenger                 as
     projection on my.Passenger {
       *,
       FirstName || ' ' || LastName as FullName : String @title: '{i18n>fullName}',
