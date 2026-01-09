@@ -13,7 +13,7 @@ using {
 
 namespace sap.fe.cap.travel;
 
-type BookingData : {
+type BookingData   : {
   TotalBookingsCount     : Integer;
   NewBookingsCount       : Integer;
   AcceptedBookingsCount  : Integer;
@@ -39,12 +39,14 @@ entity Travel : managed {
                                  on to_Booking.to_Travel = $self;
 };
 
+type TransportCode : String enum {
+  plane = 'plane';
+  train = 'train';
+  car = 'car';
+}
+
 entity TransportationType : CodeList {
-  key code : String enum {
-        plane = 'plane';
-        train = 'train';
-        car = 'car';
-      };
+  key code : TransportCode
 }
 
 entity Travel2TransportationType {

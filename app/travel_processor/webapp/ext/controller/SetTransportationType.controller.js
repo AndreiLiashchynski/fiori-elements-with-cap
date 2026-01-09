@@ -2,11 +2,12 @@ sap.ui.define([
     "sap/ui/core/mvc/ControllerExtension",
     "sap/ui/core/Fragment",
     "sap/m/MessageToast",
+    "sap/m/MessageBox",
     "sap/fe/cap/travel/constants/dialogConstants",
     "sap/fe/cap/travel/formatter/formatter",
     "sap/fe/cap/travel/constants/messageKeys",
     "sap/fe/cap/travel/constants/actionConstants",
-], function (ControllerExtension, Fragment, MessageToast,
+], function (ControllerExtension, Fragment, MessageToast, MessageBox,
     dialogConstants, formatter, messageKeys, actionConstants) {
     "use strict";
 
@@ -26,7 +27,6 @@ sap.ui.define([
                     oDialog.setModel(oDataModel)
                     oDialog.setModel(this._i18nModel, "i18n");
 
-                    this._attachButtonHandlers(oDialog);
 
                     oDialog.open();
                     this._oDialog = oDialog;
@@ -36,14 +36,7 @@ sap.ui.define([
             }
         },
 
-        _attachButtonHandlers: function (oDialog) {
-            const [btnSave, btnCancel] = oDialog.getButtons();
-
-            btnSave.attachPress(() => this._onSave(oDialog));
-            btnCancel.attachPress(() => this._onCancel(oDialog));
-        },
-
-        _onSave: async function (oDialog) {
+        onSave: async function () {
             const oMultiCombo = Fragment.byId(dialogConstants.DIALOG_ID, dialogConstants.MULTI_COMBO_ID);
             const aSelectedTypes = oMultiCombo.getSelectedKeys();
 
@@ -59,10 +52,10 @@ sap.ui.define([
                 await this._callAssignTransportationType(aUUIDs, aSelectedTypes);
 
                 MessageToast.show(this._getBundle().getText(messageKeys.SUCCESS_KEY_MESSAGE));
-                oDialog.close();
+                this._oDialog.close();
             } catch (err) {
                 console.error(err)
-                MessageToast.show(this._getBundle().getText(messageKeys.ERROR_KEY_MESSAGE));
+                MessageBox.error(this._getBundle().getText(messageKeys.ERROR_KEY_MESSAGE));
             }
         },
 
@@ -78,8 +71,8 @@ sap.ui.define([
             });
         },
 
-        _onCancel: function (oDialog) {
-            oDialog.close();
+        onCancel: function () {
+            this._oDialog.close();
         },
 
         _getBundle: function () {
