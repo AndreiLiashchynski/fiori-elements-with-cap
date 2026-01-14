@@ -8,7 +8,6 @@ class TravelService extends cds.ApplicationService {
      */
     const { Travel, Booking, BookingSupplement, Travel2TransportationType } = this.entities
 
-
     /**
      * Fill in primary keys for new Travels.
      * Note: In contrast to Bookings and BookingSupplements that has to happen
@@ -187,9 +186,38 @@ class TravelService extends cds.ApplicationService {
       if (BeginDate > EndDate) req.error(400, `Begin Date ${BeginDate} must be before End Date ${EndDate}.`, 'in/BeginDate')
     })
 
+    this.after('READ', 'TravelTransportation', (data) => {
+      const setCriticality = each => {
+        switch (each.Status_code) {
+          case 'Completed': each.Criticality = 3; break;
+          case 'InProgress': each.Criticality = 2; break;
+          case 'Cancelled': each.Criticality = 1; break;
+          default: each.Criticality = 5;
+        }
+      }
+      if (Array.isArray(data)) data.forEach(setCriticality);
+      else setCriticality(data);
+    });
+
     //
     // Action Implementations...
     //
+
+    this.on('changeTransportationStatus', async (req) => {
+      const { TransportationUUIDs, Status } = req.data;
+      const { TravelTransportation } = this.entities;
+
+      await UPDATE(TravelTransportation)
+        .set({ Status_code: Status })
+        .where({ TravelTransportationUUID: { in: TransportationUUIDs } });
+
+      await UPDATE(TravelTransportation.drafts)
+        .set({ Status_code: Status })
+        .where({ TravelTransportationUUID: { in: TransportationUUIDs } });
+
+      return true;
+    });
+
 
     this.on('assignTransportationType', async (req) => {
       const { TravelUUIDs, TransportationType } = req.data;

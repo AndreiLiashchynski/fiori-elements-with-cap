@@ -151,11 +151,17 @@ annotate TravelService.Travel with @(
                     },
                 ]
             },
+            {
+                $Type : 'UI.ReferenceFacet',
+                Label : '{i18n>Transportation}',
+                ID    : 'i18nTransportation',
+                Target: 'to_TransportationTypes/@UI.LineItem#i18nTransportation',
+            },
             { // booking list
                 $Type : 'UI.ReferenceFacet',
                 Target: 'to_Booking/@UI.PresentationVariant',
                 Label : '{i18n>Bookings}'
-            }
+            },
         ],
         FieldGroup #TravelData: {Data: [
             {Value: TravelID},
@@ -623,6 +629,87 @@ annotate TravelService.Travel with {
     to_Customer
 };
 
-annotate TravelService.Travel with {
-    TransportationType @UI.Hidden;
+annotate TravelService.TravelTransportation with @(UI.LineItem #i18nTransportation: [
+    {
+        $Type                    : 'UI.DataField',
+        Value                    : Status_code,
+        Label                    : '{i18n>Status}',
+        Criticality              : Criticality,
+        CriticalityRepresentation: #WithoutIcon,
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: OriginLocation,
+        Label: '{i18n>Originlocation}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: DestinationLocation,
+        Label: '{i18n>Destinationlocation}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: DepartureTime,
+        Label: '{i18n>Departuretime}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: ArrivalTime,
+        Label: '{i18n>Arrivaltime}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Carrier,
+        Label: '{i18n>Carrier}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: PassengerCount,
+        Label: '{i18n>Passengercount}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: VehicleInfo,
+        Label: '{i18n>Vehicleinfo}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Distance,
+        Label: '{i18n>Distance}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Cost,
+        Label: '{i18n>Cost}',
+    },
+]);
+
+annotate TravelService.TravelTransportation with {
+    Status
+    @Common.Text           : Status.name
+    @Common.TextArrangement: #TextOnly;
 };
+
+annotate TravelService.TravelTransportation with {
+    Status
+    @Common.ValueListWithFixedValues: true
+    @Common.ValueList               : {
+        $Type         : 'Common.ValueListType',
+        CollectionPath: 'TransportStatus',
+        Parameters    : [
+            {
+                $Type            : 'Common.ValueListParameterInOut',
+                LocalDataProperty: Status_code,
+                ValueListProperty: 'code'
+            },
+            {
+                $Type            : 'Common.ValueListParameterDisplayOnly',
+                ValueListProperty: 'name'
+            }
+        ]
+    };
+};
+
+annotate TravelService.TransportStatus with {
+    code  @Common.Text: name  @Common.TextArrangement: #TextOnly;
+}

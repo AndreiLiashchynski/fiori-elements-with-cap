@@ -1,0 +1,8 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" >
+    <Button 
+        id="CommentButton"
+        icon="sap-icon://comment" 
+        type="Transparent"
+        tooltip="View/Add Comments"
+        press=".extension.sap.fe.cap.travel.ext.controller.CommentsHandler.onPress" />
+</core:FragmentDefinition>

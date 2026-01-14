@@ -1,0 +1,20 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+    <HBox id="TransportationTypesContainer" alignItems="Center"> 
+    	<core:Icon
+			id="TransportationTypeIcon"
+			class="sapUiSmallMarginEnd"
+			src="{path: 'TransportationType_code', formatter: 'Formatter.mapTransportCodeToIcon'}" />
+			<Select 
+				id="TransportationTypeSelect"
+				selectedKey="{TransportationType_code}"
+				visible="{= ${ui>/editMode} === 'Editable' }"
+				items="{
+					path: '/TransportationType',
+					templateShareable: false
+				}">
+				<items>
+					<core:Item id="TransportationSelectItem" key="{code}" text="{code}" />
+				</items>
+			</Select>
+    </HBox>
+</core:FragmentDefinition>

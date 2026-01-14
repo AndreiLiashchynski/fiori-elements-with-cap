@@ -1,0 +1,21 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+    <ResponsivePopover id="CommentPopover" title="{i18n>comments}" placement="Auto">
+        
+        <FeedInput id="FeedInput"
+            post="onPostComment" 
+            visible="{ui>/isEditable}" 
+            showIcon="false" />
+        <List
+            id="CommentsList"
+            noDataText="{i18n>emptyComments}" 
+            items="{path: 'to_Comments', sorter: {path: 'createdAt', descending: true}}"
+        >
+            <FeedListItem 
+                id="Comment"
+                sender="{createdBy}" 
+                text="{CommentText}" 
+                timestamp="{createdAt}" />
+        </List>
+        
+    </ResponsivePopover>
+</core:FragmentDefinition>

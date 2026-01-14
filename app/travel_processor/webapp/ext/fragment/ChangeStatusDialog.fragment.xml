@@ -1,0 +1,24 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form">
+    <Dialog id="ChangeStatusDialog" title="{i18n>changeStatus}">
+        <VBox id="ChangeStatusVBox" alignItems="Center" justifyContent="Center">
+            <Select 
+                id="statusSelect"  
+                class="sapUiSmallMarginTop sapUiSmallMarginBottom"
+                items="{path: '/TransportStatus'}">
+                    <core:Item
+                        id="Status"
+                        key="{code}" 
+                        text="{name}" />
+            </Select>
+        </VBox>
+        <buttons>
+
+            <Button id="BtnStatusSave" text="{i18n>buttonSave}" type="Emphasized" press="onSave" />
+            <Button id="BtnStatusCancel" text="{i18n>buttonCancel}" press="onCancel" />
+
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

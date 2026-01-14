@@ -1,0 +1,5 @@
+createdAt,createdBy,TravelTransportationUUID,to_Travel_TravelUUID,TransportationType_code,Status_code,OriginLocation,DestinationLocation,DepartureTime,ArrivalTime,Carrier,PassengerCount,VehicleInfo,Distance,DistanceUnit,Cost,CurrencyCode_code
+2024-01-01T10:00:00Z,system,TT-175-1,75757221A8E4645C17002DF03754AB66,Plane,Completed,London,Singapore,2025-11-04T08:00:00Z,2025-11-04T22:00:00Z,Singapore Airlines,1,A380,10800,KM,1200,SGD
+2024-01-01T10:30:00Z,system,TT-175-2,75757221A8E4645C17002DF03754AB66,Car,Cancelled,Changi Airport,Orchard Rd,2025-11-04T23:00:00Z,2025-11-04T23:45:00Z,Grab,1,Toyota Prius,22,KM,45,USD
+2024-01-01T11:00:00Z,system,TT-431-1,75757221A8E4645C17002DF03754AB66,Train,InProgress,Munich,Paris,2026-09-02T09:00:00Z,2026-09-02T15:00:00Z,SNCF,2,TGV,800,KM,150,SGD
+2024-01-01T11:30:00Z,system,TT-431-2,75757221A8E4645C17002DF03754AB66,Plane,Planned,Paris,Singapore,2026-09-03T10:00:00Z,2026-09-04T06:00:00Z,Air France,2,B777,10700,KM,2100,SGD
