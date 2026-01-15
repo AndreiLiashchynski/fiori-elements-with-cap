@@ -129,6 +129,15 @@
                         "TravelObjectPage",
                         "BookingObjectPage"
                     ]
+                },
+                {
+                    "name": "Travel_to_TransportationTypesObjectPage",
+                    "pattern": "Travel({key})/to_TransportationTypes({to_TransportationTypesKey}):?query:",
+                    "target": [
+                        "TravelList",
+                        "TravelObjectPage",
+                        "Travel_to_TransportationTypesObjectPage"
+                    ]
                 }
             ],
             "targets": {
@@ -188,6 +197,11 @@
                                     "detail": {
                                         "route": "BookingObjectPage"
                                     }
+                                },
+                                "to_TransportationTypes": {
+                                    "detail": {
+                                        "route": "Travel_to_TransportationTypesObjectPage"
+                                    }
                                 }
                             },
                             "controlConfiguration": {
@@ -201,7 +215,7 @@
                                             "column": true,
                                             "sort": true,
                                             "filter": true
-                                        },
+                                        }
                                     },
                                     "columns": {
                                         "TransportationType": {
@@ -267,6 +281,30 @@
                     },
                     "controlAggregation": "endColumnPages",
                     "contextPattern": "/Travel({key})/to_Booking({key2})"
+                },
+                "Travel_to_TransportationTypesObjectPage": {
+                    "type": "Component",
+                    "id": "Travel_to_TransportationTypesObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "controlAggregation": "endColumnPages",
+                    "options": {
+                        "settings": {
+                            "navigation": {},
+                            "contextPath": "/Travel/to_TransportationTypes",
+                            "controlConfiguration": {
+                                "to_Comments/@com.sap.vocabularies.UI.v1.LineItem#i18nComments": {
+                                    "tableSettings": {
+                                        "personalization": {
+                                            "column": true,
+                                            "filter": true,
+                                            "sort": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "contextPattern": "/Travel({key})/to_TransportationTypes({to_TransportationTypesKey})"
                 }
             },
             "config": {

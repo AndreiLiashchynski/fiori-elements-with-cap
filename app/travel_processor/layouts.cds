@@ -629,60 +629,123 @@ annotate TravelService.Travel with {
     to_Customer
 };
 
-annotate TravelService.TravelTransportation with @(UI.LineItem #i18nTransportation: [
-    {
-        $Type                    : 'UI.DataField',
-        Value                    : Status_code,
-        Label                    : '{i18n>Status}',
-        Criticality              : Criticality,
-        CriticalityRepresentation: #WithoutIcon,
+annotate TravelService.TravelTransportation with @(
+    UI.LineItem #i18nTransportation      : [
+        {
+            $Type                    : 'UI.DataField',
+            Value                    : Status_code,
+            Label                    : '{i18n>Status}',
+            Criticality              : Criticality,
+            CriticalityRepresentation: #WithoutIcon,
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: OriginLocation,
+            Label: '{i18n>Originlocation}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: DestinationLocation,
+            Label: '{i18n>Destinationlocation}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: DepartureTime,
+            Label: '{i18n>Departuretime}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: ArrivalTime,
+            Label: '{i18n>Arrivaltime}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: Carrier,
+            Label: '{i18n>Carrier}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: PassengerCount,
+            Label: '{i18n>Passengercount}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: VehicleInfo,
+            Label: '{i18n>Vehicleinfo}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: Distance,
+            Label: '{i18n>Distance}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: Cost,
+            Label: '{i18n>Cost}',
+        },
+    ],
+    UI.Facets                            : [{
+        $Type : 'UI.ReferenceFacet',
+        Label : '{i18n>GeneralInformation}',
+        ID    : 'i18nGeneralInformation',
+        Target: '@UI.FieldGroup#i18nGeneralInformation',
+    }, ],
+    UI.FieldGroup #i18nGeneralInformation: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: TransportationType.name,
+                Label: '{i18n>TransportationType}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Status.name,
+                Label: '{i18n>Status}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: OriginLocation,
+                Label: '{i18n>Originlocation}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: DestinationLocation,
+                Label: '{i18n>Destinationlocation}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: DepartureTime,
+                Label: '{i18n>Departuretime}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: ArrivalTime,
+                Label: '{i18n>Arrivaltime}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Carrier,
+                Label: '{i18n>Carrier}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PassengerCount,
+                Label: '{i18n>Passengercount}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Distance,
+                Label: '{i18n>Distance}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Cost,
+                Label: '{i18n>Cost}',
+            },
+        ],
     },
-    {
-        $Type: 'UI.DataField',
-        Value: OriginLocation,
-        Label: '{i18n>Originlocation}',
-    },
-    {
-        $Type: 'UI.DataField',
-        Value: DestinationLocation,
-        Label: '{i18n>Destinationlocation}',
-    },
-    {
-        $Type: 'UI.DataField',
-        Value: DepartureTime,
-        Label: '{i18n>Departuretime}',
-    },
-    {
-        $Type: 'UI.DataField',
-        Value: ArrivalTime,
-        Label: '{i18n>Arrivaltime}',
-    },
-    {
-        $Type: 'UI.DataField',
-        Value: Carrier,
-        Label: '{i18n>Carrier}',
-    },
-    {
-        $Type: 'UI.DataField',
-        Value: PassengerCount,
-        Label: '{i18n>Passengercount}',
-    },
-    {
-        $Type: 'UI.DataField',
-        Value: VehicleInfo,
-        Label: '{i18n>Vehicleinfo}',
-    },
-    {
-        $Type: 'UI.DataField',
-        Value: Distance,
-        Label: '{i18n>Distance}',
-    },
-    {
-        $Type: 'UI.DataField',
-        Value: Cost,
-        Label: '{i18n>Cost}',
-    },
-]);
+);
 
 annotate TravelService.TravelTransportation with {
     Status
