@@ -27,18 +27,16 @@ service TravelService @(path: '/processor') {
 
   entity SupplementScope      as projection on my.SupplementScope;
 
-  @odata.draft.bypass
   entity TravelTransportation as projection on my.TravelTransportation;
 
   entity TransportStatus      as projection on my.TransportStatus;
 
-  @odata.draft.bypass
   entity TransportationType   as projection on my.TransportationType;
 
   entity TravelComment        as projection on my.TravelComment;
 
   // Travel: To avoid number formatting of the travel ID, make it a String
-  @odata.draft.bypass
+  @odata.draft.enabled
   entity Travel               as
     projection on my.Travel {
       *,

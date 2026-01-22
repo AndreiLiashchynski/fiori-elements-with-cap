@@ -684,12 +684,20 @@ annotate TravelService.TravelTransportation with @(
             Label: '{i18n>Cost}',
         },
     ],
-    UI.Facets                            : [{
-        $Type : 'UI.ReferenceFacet',
-        Label : '{i18n>GeneralInformation}',
-        ID    : 'i18nGeneralInformation',
-        Target: '@UI.FieldGroup#i18nGeneralInformation',
-    }, ],
+    UI.Facets                            : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : '{i18n>GeneralInformation}',
+            ID    : 'i18nGeneralInformation',
+            Target: '@UI.FieldGroup#i18nGeneralInformation',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : '{i18n>Comments}',
+            ID    : 'i18nComments',
+            Target: 'to_Comments/@UI.LineItem#i18nComments',
+        },
+    ],
     UI.FieldGroup #i18nGeneralInformation: {
         $Type: 'UI.FieldGroupType',
         Data : [
@@ -776,3 +784,21 @@ annotate TravelService.TravelTransportation with {
 annotate TravelService.TransportStatus with {
     code  @Common.Text: name  @Common.TextArrangement: #TextOnly;
 }
+
+annotate TravelService.TravelComment with @(UI.LineItem #i18nComments: [
+    {
+        $Type: 'UI.DataField',
+        Value: CommentText,
+        Label: '{i18n>Commenttext}',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: createdAt,
+        Label: '{i18n>CreatedAt}'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: createdBy,
+        Label: '{i18n>CreatedBy}'
+    },
+]);
