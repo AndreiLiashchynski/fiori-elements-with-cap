@@ -3,18 +3,27 @@
     	<core:Icon
 			id="TransportationTypeIcon"
 			class="sapUiSmallMarginEnd"
+			visible="{= !${ui>/isEditable} }"
+			tooltip="{TransportationType/name}"
 			src="{path: 'TransportationType_code', formatter: 'Formatter.mapTransportCodeToIcon'}" />
 			<Select 
 				id="TransportationTypeSelect"
+				type="IconOnly"
+				icon="{path: 'TransportationType_code', formatter: 'Formatter.mapTransportCodeToIcon'}"
 				selectedKey="{TransportationType_code}"
-				visible="{= ${ui>/editMode} === 'Editable' }"
+				visible="{ui>/isEditable}" 
+				tooltip="{TransportationType/name}"
 				items="{
 					path: '/TransportationType',
 					templateShareable: false
 				}">
 				<items>
-					<core:Item id="TransportationSelectItem" key="{code}" text="{code}" />
+					<core:ListItem 
+						id="TransportationSelectItem" 
+						key="{code}" 
+						text="{name}" 
+						icon="{path: 'code', formatter: 'Formatter.mapTransportCodeToIcon'}" />
 				</items>
-			</Select>
+        </Select>
     </HBox>
 </core:FragmentDefinition>

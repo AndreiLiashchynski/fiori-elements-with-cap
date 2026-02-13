@@ -3,6 +3,6 @@
         id="CommentButton"
         icon="sap-icon://comment" 
         type="Transparent"
-        tooltip="View/Add Comments"
-        press=".extension.sap.fe.cap.travel.ext.controller.CommentsHandler.onPress" />
+        tooltip="{i18n>commentsTooltip}" 
+        press=".extension.sap.fe.cap.travel.ext.controller.CommentsHandler.handleCommentsButtonPress" />
 </core:FragmentDefinition>

@@ -77,6 +77,9 @@ service TravelService @(path: '/processor') {
 
   annotate TravelService.changeTransportationStatus @Common.SideEffects: {TargetEntities: ['TravelService.TravelTransportation']};
 
+  action   postComment(TravelTransportationUUID: UUID,
+                       CommentText: String)              returns TravelComment;
+
   action   assignTransportationType(TravelUUIDs: array of UUID, TransportationType: array of String);
   action   changeTransportationStatus(TransportationUUIDs: array of String, Status: String);
 

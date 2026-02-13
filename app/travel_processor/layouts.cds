@@ -684,32 +684,26 @@ annotate TravelService.TravelTransportation with @(
             Label: '{i18n>Cost}',
         },
     ],
-    UI.Facets                            : [
-        {
-            $Type : 'UI.ReferenceFacet',
-            Label : '{i18n>GeneralInformation}',
-            ID    : 'i18nGeneralInformation',
-            Target: '@UI.FieldGroup#i18nGeneralInformation',
-        },
-        {
-            $Type : 'UI.ReferenceFacet',
-            Label : '{i18n>Comments}',
-            ID    : 'i18nComments',
-            Target: 'to_Comments/@UI.LineItem#i18nComments',
-        },
-    ],
+    UI.Facets                            : [{
+        $Type : 'UI.ReferenceFacet',
+        Label : '{i18n>GeneralInformation}',
+        ID    : 'i18nGeneralInformation',
+        Target: '@UI.FieldGroup#i18nGeneralInformation',
+    }, ],
     UI.FieldGroup #i18nGeneralInformation: {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
                 $Type: 'UI.DataField',
-                Value: TransportationType.name,
+                Value: TransportationType_code,
                 Label: '{i18n>TransportationType}',
             },
             {
-                $Type: 'UI.DataField',
-                Value: Status.name,
-                Label: '{i18n>Status}',
+                $Type                    : 'UI.DataField',
+                Value                    : Status_code,
+                Label                    : '{i18n>Status}',
+                Criticality              : Criticality,
+                CriticalityRepresentation: #WithoutIcon,
             },
             {
                 $Type: 'UI.DataField',
@@ -802,3 +796,19 @@ annotate TravelService.TravelComment with @(UI.LineItem #i18nComments: [
         Label: '{i18n>CreatedBy}'
     },
 ]);
+
+annotate TravelService.TravelTransportation with {
+    TransportationType @(
+        Common.ValueList               : {
+            $Type         : 'Common.ValueListType',
+            CollectionPath: 'TransportationType',
+            Parameters    : [{
+                $Type            : 'Common.ValueListParameterInOut',
+                LocalDataProperty: TransportationType_code,
+                ValueListProperty: 'code',
+            }, ],
+            Label         : '{i18n>TransportationType}',
+        },
+        Common.ValueListWithFixedValues: true
+    )
+};

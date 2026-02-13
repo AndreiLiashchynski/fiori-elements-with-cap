@@ -6,7 +6,7 @@ class TravelService extends cds.ApplicationService {
     /**
      * Reflect definitions from the service's CDS model
      */
-    const { Travel, Booking, BookingSupplement, Travel2TransportationType } = this.entities
+    const { Travel, Booking, BookingSupplement, Travel2TransportationType, TravelComment } = this.entities
 
     /**
      * Fill in primary keys for new Travels.
@@ -202,6 +202,29 @@ class TravelService extends cds.ApplicationService {
     //
     // Action Implementations...
     //
+
+    this.on('postComment', async (req) => {
+      const { TravelTransportationUUID, CommentText } = req.data;
+
+      const payload = {
+        to_Transportation_TravelTransportationUUID: TravelTransportationUUID,
+        CommentText: CommentText
+      };
+
+      await INSERT.into(TravelComment).entries(payload);
+
+      const parent = await SELECT.one.from(this.entities.TravelTransportation.drafts)
+        .where({ TravelTransportationUUID });
+      if (parent) {
+        payload.DraftAdministrativeData_DraftUUID = parent.DraftAdministrativeData_DraftUUID;
+        await INSERT.into(TravelComment.drafts).entries(payload);
+      }
+
+      return SELECT.one.from(TravelComment).where({
+        to_Transportation_TravelTransportationUUID: TravelTransportationUUID,
+        CommentText: CommentText
+      });
+    });
 
     this.on('changeTransportationStatus', async (req) => {
       const { TransportationUUIDs, Status } = req.data;

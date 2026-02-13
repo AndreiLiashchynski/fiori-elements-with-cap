@@ -207,6 +207,7 @@
                             "controlConfiguration": {
                                 "to_TransportationTypes/@com.sap.vocabularies.UI.v1.LineItem#i18nTransportation": {
                                     "tableSettings": {
+                                        "header": "{{Transportation}}",
                                         "type": "ResponsiveTable",
                                         "creationMode": {
                                             "name": "Inline"
@@ -291,13 +292,16 @@
                         "settings": {
                             "navigation": {},
                             "contextPath": "/Travel/to_TransportationTypes",
-                            "controlConfiguration": {
-                                "to_Comments/@com.sap.vocabularies.UI.v1.LineItem#i18nComments": {
-                                    "tableSettings": {
-                                        "personalization": {
-                                            "column": true,
-                                            "filter": true,
-                                            "sort": true
+                            "content": {
+                                "body": {
+                                    "sections": {
+                                        "CommentsSection": {
+                                            "template": "sap.fe.cap.travel.ext.fragment.CommentsSection",
+                                            "position": {
+                                                "placement": "After",
+                                                "anchor": "i18nGeneralInformation"
+                                            },
+                                            "title": "{i18n>commentsSection}"
                                         }
                                     }
                                 }

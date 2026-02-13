@@ -2,11 +2,11 @@
     <ResponsivePopover id="CommentPopover" title="{i18n>comments}" placement="Auto">
         
         <FeedInput id="FeedInput"
-            post="onPostComment" 
+            post="onCommentPost" 
             visible="{ui>/isEditable}" 
             showIcon="false" />
         <List
-            id="CommentsList"
+            id="CommentsPopoverList"
             noDataText="{i18n>emptyComments}" 
             items="{path: 'to_Comments', sorter: {path: 'createdAt', descending: true}}"
         >
