@@ -3,9 +3,9 @@ sap.ui.define([], function () {
     return {
         mapTransportCodeToIcon: function (sCode) {
             const oMap = {
-                "plane": "sap-icon://flight",
-                "train": "sap-icon://cargo-train",
-                "car": "sap-icon://car-rental"
+                "Plane": "sap-icon://flight",
+                "Train": "sap-icon://cargo-train",
+                "Car": "sap-icon://car-rental"
             };
 
             return oMap[sCode] || "sap-icon://question-mark";

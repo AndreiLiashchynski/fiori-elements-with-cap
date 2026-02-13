@@ -6,8 +6,7 @@ class TravelService extends cds.ApplicationService {
     /**
      * Reflect definitions from the service's CDS model
      */
-    const { Travel, Booking, BookingSupplement, Travel2TransportationType } = this.entities
-
+    const { Travel, Booking, BookingSupplement, Travel2TransportationType, TravelComment } = this.entities
 
     /**
      * Fill in primary keys for new Travels.
@@ -187,9 +186,61 @@ class TravelService extends cds.ApplicationService {
       if (BeginDate > EndDate) req.error(400, `Begin Date ${BeginDate} must be before End Date ${EndDate}.`, 'in/BeginDate')
     })
 
+    this.after('READ', 'TravelTransportation', (data) => {
+      const setCriticality = each => {
+        switch (each.Status_code) {
+          case 'Completed': each.Criticality = 3; break;
+          case 'InProgress': each.Criticality = 2; break;
+          case 'Cancelled': each.Criticality = 1; break;
+          default: each.Criticality = 5;
+        }
+      }
+      if (Array.isArray(data)) data.forEach(setCriticality);
+      else setCriticality(data);
+    });
+
     //
     // Action Implementations...
     //
+
+    this.on('postComment', async (req) => {
+      const { TravelTransportationUUID, CommentText } = req.data;
+
+      const payload = {
+        to_Transportation_TravelTransportationUUID: TravelTransportationUUID,
+        CommentText: CommentText
+      };
+
+      await INSERT.into(TravelComment).entries(payload);
+
+      const parent = await SELECT.one.from(this.entities.TravelTransportation.drafts)
+        .where({ TravelTransportationUUID });
+      if (parent) {
+        payload.DraftAdministrativeData_DraftUUID = parent.DraftAdministrativeData_DraftUUID;
+        await INSERT.into(TravelComment.drafts).entries(payload);
+      }
+
+      return SELECT.one.from(TravelComment).where({
+        to_Transportation_TravelTransportationUUID: TravelTransportationUUID,
+        CommentText: CommentText
+      });
+    });
+
+    this.on('changeTransportationStatus', async (req) => {
+      const { TransportationUUIDs, Status } = req.data;
+      const { TravelTransportation } = this.entities;
+
+      await UPDATE(TravelTransportation)
+        .set({ Status_code: Status })
+        .where({ TravelTransportationUUID: { in: TransportationUUIDs } });
+
+      await UPDATE(TravelTransportation.drafts)
+        .set({ Status_code: Status })
+        .where({ TravelTransportationUUID: { in: TransportationUUIDs } });
+
+      return true;
+    });
+
 
     this.on('assignTransportationType', async (req) => {
       const { TravelUUIDs, TransportationType } = req.data;

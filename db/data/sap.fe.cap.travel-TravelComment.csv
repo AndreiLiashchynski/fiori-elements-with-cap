@@ -1,0 +1,7 @@
+createdAt,createdBy,TravelCommentUUID,to_Transportation_TravelTransportationUUID,CommentText
+2025-11-06T14:10:00Z,system,CM-01,TT-175-1,Flight arrived early. Pilot was great.
+2025-11-06T14:20:00Z,user_1,CM-01B,TT-175-1,The legroom was also impressive.
+2025-11-06T16:15:00Z,system,CM-02,TT-175-2,Traffic near JFK was heavy.
+2026-09-02T16:00:00Z,reviewer,CM-03,TT-431-1,Train was delayed by 15 mins but very clean.
+2026-09-02T16:30:00Z,system,CM-04,TT-431-1,Catering service on TGV was excellent.
+2026-09-04T07:00:00Z,processor,CM-05,TT-431-2,Long haul flight. Verified passenger counts.

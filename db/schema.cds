@@ -13,7 +13,7 @@ using {
 
 namespace sap.fe.cap.travel;
 
-type BookingData : {
+type BookingData   : {
   TotalBookingsCount     : Integer;
   NewBookingsCount       : Integer;
   AcceptedBookingsCount  : Integer;
@@ -31,7 +31,7 @@ entity Travel : managed {
       Progress               : Integer                     @readonly;
       Description            : String(1024);
       TravelStatus           : Association to TravelStatus @readonly;
-      to_TransportationTypes : Composition of many Travel2TransportationType
+      to_TransportationTypes : Composition of many TravelTransportation
                                  on to_TransportationTypes.to_Travel = $self;
       to_Agency              : Association to TravelAgency @assert.target;
       to_Customer            : Association to Passenger;
@@ -39,17 +39,58 @@ entity Travel : managed {
                                  on to_Booking.to_Travel = $self;
 };
 
-entity TransportationType : CodeList {
-  key code : String enum {
-        plane = 'plane';
-        train = 'train';
-        car = 'car';
-      };
+entity TravelTransportation : managed {
+  key TravelTransportationUUID : UUID;
+      to_Travel                : Association to Travel;
+      TransportationType       : Association to TransportationType;
+      Status                   : Association to TransportStatus;
+      Criticality              : Integer;
+      OriginLocation           : String(100);
+      DestinationLocation      : String(100);
+      DepartureTime            : DateTime;
+      ArrivalTime              : DateTime;
+      Carrier                  : String(100);
+      PassengerCount           : Integer;
+      VehicleInfo              : String(100);
+
+      @Measures.Unit       : DistanceUnit
+      Distance                 : Decimal(10, 0);
+      DistanceUnit             : String(3) default 'KM';
+
+      @Measures.ISOCurrency: CurrencyCode
+      Cost                     : Decimal(16, 0);
+      CurrencyCode             : Currency;
+
+      to_Comments              : Composition of many TravelComment
+                                   on to_Comments.to_Transportation = $self;
 }
 
-entity Travel2TransportationType {
-  key to_Travel          : Association to Travel;
-  key transportationType : Association to TransportationType;
+entity TravelComment : managed {
+  key TravelCommentUUID : UUID;
+      to_Transportation : Association to TravelTransportation;
+
+      CommentText       : String(2000);
+}
+
+entity TransportationType : CodeList {
+  key code : TransportCode
+}
+
+type TransportCode : String enum {
+  Plane = 'Plane';
+  Train = 'Train';
+  Car = 'Car';
+}
+
+entity TransportStatus : CodeList {
+  key code : StatusCode
+}
+
+type StatusCode    : String enum {
+  Planned = 'Planned';
+  InProgress = 'InProgress';
+  Completed = 'Completed';
+  Cancelled = 'Cancelled';
 }
 
 entity Booking : managed {

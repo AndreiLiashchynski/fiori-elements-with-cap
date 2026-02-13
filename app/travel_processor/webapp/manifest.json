@@ -67,6 +67,7 @@
     },
     "sap.ui5": {
         "flexEnabled": true,
+        "handleValidation": true,
         "resources": {
             "css": []
         },
@@ -128,6 +129,15 @@
                         "TravelObjectPage",
                         "BookingObjectPage"
                     ]
+                },
+                {
+                    "name": "Travel_to_TransportationTypesObjectPage",
+                    "pattern": "Travel({key})/to_TransportationTypes({to_TransportationTypesKey}):?query:",
+                    "target": [
+                        "TravelList",
+                        "TravelObjectPage",
+                        "Travel_to_TransportationTypesObjectPage"
+                    ]
                 }
             ],
             "targets": {
@@ -142,28 +152,6 @@
                             "controlConfiguration": {
                                 "@com.sap.vocabularies.UI.v1.SelectionFields": {
                                     "useSemanticDateRange": true
-                                },
-                                "@com.sap.vocabularies.UI.v1.LineItem": {
-                                    "actions": {
-                                        "Press": {
-                                            "press": ".extension.sap.fe.cap.travel.ext.controller.SetTransportationType.handleSetTransportationTypePress",
-                                            "visible": true,
-                                            "enabled": true,
-                                            "requiresSelection": true,
-                                            "text": "{i18n>setTransportationType}"
-                                        }
-                                    },
-                                    "columns": {
-                                        "TransportType1": {
-                                            "header": "{i18n>transportationType}",
-                                            "position": {
-                                                "anchor": "DataFieldForAnnotation::to_Agency::Contact::contact",
-                                                "placement": "After"
-                                            },
-                                            "availability": "Adaptation",
-                                            "template": "sap.fe.cap.travel.ext.fragment.TransportType"
-                                        }
-                                    }
                                 }
                             },
                             "navigation": {
@@ -209,19 +197,55 @@
                                     "detail": {
                                         "route": "BookingObjectPage"
                                     }
+                                },
+                                "to_TransportationTypes": {
+                                    "detail": {
+                                        "route": "Travel_to_TransportationTypesObjectPage"
+                                    }
                                 }
                             },
                             "controlConfiguration": {
-                                "to_Booking/@com.sap.vocabularies.UI.v1.LineItem": {
+                                "to_TransportationTypes/@com.sap.vocabularies.UI.v1.LineItem#i18nTransportation": {
                                     "tableSettings": {
+                                        "header": "{{Transportation}}",
                                         "type": "ResponsiveTable",
+                                        "creationMode": {
+                                            "name": "Inline"
+                                        },
                                         "personalization": {
                                             "column": true,
-                                            "sort": false
+                                            "sort": true,
+                                            "filter": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "TransportationType": {
+                                            "header": "{i18n>transportationtype}",
+                                            "position": {
+                                                "anchor": "DataField::Status_code",
+                                                "placement": "Before"
+                                            },
+                                            "template": "sap.fe.cap.travel.ext.fragment.TransportationType",
+                                            "width": "9rem"
                                         },
-                                        "creationMode": {
-                                            "name": "Inline",
-                                            "createAtEnd": true
+                                        "Comments1": {
+                                            "header": "{i18n>comments}",
+                                            "position": {
+                                                "anchor": "DataField::Cost",
+                                                "placement": "After"
+                                            },
+                                            "template": "sap.fe.cap.travel.ext.fragment.Comments",
+                                            "width": "8rem"
+                                        },
+                                        "DataField::Status": {
+                                            "width": "8rem"
+                                        }
+                                    },
+                                    "actions": {
+                                        "ChangeStatus": {
+                                            "press": ".extension.sap.fe.cap.travel.ext.controller.ChangeStatusHandler.handleChangeStatusTypePress",
+                                            "requiresSelection": true,
+                                            "text": "{i18n>changeStatus}"
                                         }
                                     }
                                 }
@@ -258,6 +282,33 @@
                     },
                     "controlAggregation": "endColumnPages",
                     "contextPattern": "/Travel({key})/to_Booking({key2})"
+                },
+                "Travel_to_TransportationTypesObjectPage": {
+                    "type": "Component",
+                    "id": "Travel_to_TransportationTypesObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "controlAggregation": "endColumnPages",
+                    "options": {
+                        "settings": {
+                            "navigation": {},
+                            "contextPath": "/Travel/to_TransportationTypes",
+                            "content": {
+                                "body": {
+                                    "sections": {
+                                        "CommentsSection": {
+                                            "template": "sap.fe.cap.travel.ext.fragment.CommentsSection",
+                                            "position": {
+                                                "placement": "After",
+                                                "anchor": "i18nGeneralInformation"
+                                            },
+                                            "title": "{i18n>commentsSection}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "contextPattern": "/Travel({key})/to_TransportationTypes({to_TransportationTypesKey})"
                 }
             },
             "config": {
@@ -278,6 +329,12 @@
                     "sap.fe.templates.ListReport.ListReportController": {
                         "controllerNames": [
                             "sap.fe.cap.travel.ext.controller.SetTransportationType"
+                        ]
+                    },
+                    "sap.fe.templates.ObjectPage.ObjectPageController": {
+                        "controllerNames": [
+                            "sap.fe.cap.travel.ext.controller.CommentsHandler",
+                            "sap.fe.cap.travel.ext.controller.ChangeStatusHandler"
                         ]
                     }
                 }

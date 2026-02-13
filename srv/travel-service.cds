@@ -25,13 +25,19 @@ service TravelService @(path: '/processor') {
     }
   ])
 
-  entity SupplementScope           as projection on my.SupplementScope;
+  entity SupplementScope      as projection on my.SupplementScope;
 
-  entity Travel2TransportationType as projection on my.Travel2TransportationType;
-  entity TransportationType        as projection on my.TransportationType;
+  entity TravelTransportation as projection on my.TravelTransportation;
+
+  entity TransportStatus      as projection on my.TransportStatus;
+
+  entity TransportationType   as projection on my.TransportationType;
+
+  entity TravelComment        as projection on my.TravelComment;
 
   // Travel: To avoid number formatting of the travel ID, make it a String
-  entity Travel                    as
+  @odata.draft.enabled
+  entity Travel               as
     projection on my.Travel {
       *,
       TravelID                                                                 : String  @readonly  @Common.Text: Description,
@@ -69,13 +75,19 @@ service TravelService @(path: '/processor') {
     TargetEntities  : ['/TravelService.EntityContainer/Travel']
   };
 
+  annotate TravelService.changeTransportationStatus @Common.SideEffects: {TargetEntities: ['TravelService.TravelTransportation']};
+
+  action   postComment(TravelTransportationUUID: UUID,
+                       CommentText: String)              returns TravelComment;
+
   action   assignTransportationType(TravelUUIDs: array of UUID, TransportationType: array of String);
+  action   changeTransportationStatus(TransportationUUIDs: array of String, Status: String);
 
   // Function import used in Controller Extension 'PassengerOPExtend.js' to calculate booking data
   function getBookingDataOfPassenger(CustomerID: String) returns my.BookingData;
 
   // Passenger: Add joined property 'FullName' and association 'to_Booking'
-  entity Passenger                 as
+  entity Passenger            as
     projection on my.Passenger {
       *,
       FirstName || ' ' || LastName as FullName : String @title: '{i18n>fullName}',
@@ -123,4 +135,23 @@ annotate TravelService.Travel with @Aggregation.ApplySupported: {
     PassengerCountry,
   ],
   AggregatableProperties: [{Property: TravelID, }],
+};
+
+annotate my.TravelTransportation with {
+  @Measures.ISOCurrency: CurrencyCode_code
+  Cost;
+}
+
+annotate TravelService.TravelTransportation with {
+  TransportationType  @mandatory;
+  OriginLocation      @mandatory;
+  DestinationLocation @mandatory;
+  DepartureTime       @mandatory;
+  ArrivalTime         @mandatory;
+  PassengerCount      @mandatory;
+  Status              @mandatory;
+  Carrier             @mandatory;
+  VehicleInfo         @mandatory;
+  Distance            @mandatory;
+  Cost                @mandatory;
 };

@@ -1,56 +1,53 @@
 sap.ui.define([
     "sap/ui/core/mvc/ControllerExtension",
-    "sap/ui/core/Fragment",
     "sap/m/MessageToast",
-    "sap/fe/cap/travel/constants/dialogConstants",
+    "sap/m/MessageBox",
     "sap/fe/cap/travel/formatter/formatter",
-    "sap/fe/cap/travel/constants/messageKeys",
-    "sap/fe/cap/travel/constants/actionConstants",
-], function (ControllerExtension, Fragment, MessageToast,
-    dialogConstants, formatter, messageKeys, actionConstants) {
+    "sap/fe/cap/travel/constants/constants"
+], function (ControllerExtension, MessageToast, MessageBox,
+    formatter, constants) {
     "use strict";
 
+    /**
+     * @class
+     * @name sap.fe.cap.travel.ext.controller.SetTransportationType
+     * @description Controller extension for assigning transportation types to travel records.
+     */
     return ControllerExtension.extend("sap.fe.cap.travel.ext.controller.SetTransportationType", {
 
-        handleSetTransportationTypePress: function () {
-            this._i18nModel = this.getView().getModel("i18n");
+        /**
+        * Opens the Transportation Type dialog fragment.
+        * @public
+        * @returns {Promise<void>} A promise that resolves when the dialog is opened.
+        */
+        handleSetTransportationTypePress: async function () {
+            this._oView = this.getView();
+            this._i18nModel = this._oView.getModel("i18n");
 
             if (!this._oDialog) {
-                Fragment.load({
-                    id: dialogConstants.DIALOG_ID,
-                    name: dialogConstants.FRAGMENT_NAME,
+                this._oDialog = await this.base.getExtensionAPI().loadFragment({
+                    id: constants.UI.IDS.TRANSPORTATION_DIALOG,
+                    name: constants.UI.FRAGMENTS.SET_TRANSPORTATION_DIALOG,
                     controller: this
-                }).then(function (oDialog) {
-                    const oDataModel = this.getView().getModel();
-
-                    oDialog.setModel(oDataModel)
-                    oDialog.setModel(this._i18nModel, "i18n");
-
-                    this._attachButtonHandlers(oDialog);
-
-                    oDialog.open();
-                    this._oDialog = oDialog;
-                }.bind(this));
-            } else {
-                this._oDialog.open();
+                });
             }
+            this._oDialog.open();
         },
 
-        _attachButtonHandlers: function (oDialog) {
-            const [btnSave, btnCancel] = oDialog.getButtons();
-
-            btnSave.attachPress(() => this._onSave(oDialog));
-            btnCancel.attachPress(() => this._onCancel(oDialog));
-        },
-
-        _onSave: async function (oDialog) {
-            const oMultiCombo = Fragment.byId(dialogConstants.DIALOG_ID, dialogConstants.MULTI_COMBO_ID);
+        /**
+         * Validates multi-combo selection and table context.
+         * Triggers the assignment action and provides feedback.
+         * @public
+         * @returns {Promise<void>} Representing the asynchronous save process.
+         */
+        onSetTypeSave: async function () {
+            const oMultiCombo = this._oView.byId(constants.UI.IDS.MULTI_COMBO);
             const aSelectedTypes = oMultiCombo.getSelectedKeys();
 
-            const oTable = sap.ui.getCore().byId(dialogConstants.TABLE_ID);
+            const oTable = this._oView.byId(constants.UI.IDS.TRANSPORTATION_TABLE);
             const aContexts = oTable.getSelectedContexts();
             const aUUIDs = aContexts
-                .map(c => c.getProperty("TravelUUID"))
+                .map(c => c.getProperty(constants.DATA.PARAMETERS.TRAVEL_UUID,))
                 .map(formatter.formatUUID);
 
             try {
@@ -58,33 +55,49 @@ sap.ui.define([
 
                 await this._callAssignTransportationType(aUUIDs, aSelectedTypes);
 
-                MessageToast.show(this._getBundle().getText(messageKeys.SUCCESS_KEY_MESSAGE));
-                oDialog.close();
+                MessageToast.show(this._getBundle().getText(constants.MESSAGES.SUCCESS.TRANSPORTATION));
+                this._oDialog.close();
             } catch (err) {
                 console.error(err)
-                MessageToast.show(this._getBundle().getText(messageKeys.ERROR_KEY_MESSAGE));
+                MessageBox.error(this._getBundle().getText(constants.MESSAGES.ERROR.TRANSPORTATION));
             }
         },
 
+        /**
+         * Invokes the backend action 'assignTransportationType' via the EditFlow API.
+         * @param {string[]} aUUIDs Array of Travel UUIDs to update.
+         * @param {string[]} sTypes Array of selected transportation type keys.
+         * @private
+         * @returns {Promise<void>} The action invocation promise.
+         */
         _callAssignTransportationType: async function (aUUIDs, sTypes) {
-            const oModel = this.getView().getModel();
-            await this.base.getExtensionAPI().editFlow.invokeAction(actionConstants.ACTIONS.ASSIGN_TRANSPORTATION_TYPE, {
+            const oModel = this._oView.getModel();
+
+            await this.base.getExtensionAPI().editFlow.invokeAction(constants.DATA.ACTIONS.ASSIGN_TRANSPORTATION_TYPE, {
                 model: oModel,
                 parameterValues: [
-                    { name: actionConstants.PARAMETERS.TRAVEL_UUIDS, value: aUUIDs },
-                    { name: actionConstants.PARAMETERS.TRANSPORTATION_TYPE, value: sTypes }
+                    { name: constants.DATA.PARAMETERS.TRAVEL_UUIDS, value: aUUIDs },
+                    { name: constants.DATA.PARAMETERS.TRANSPORTATION_TYPE, value: sTypes }
                 ],
                 skipParameterDialog: true
             });
         },
 
-        _onCancel: function (oDialog) {
-            oDialog.close();
+        /**
+         * Closes the transportation type dialog.
+         * @public
+         */
+        onSetTypeCancel: function () {
+            this._oDialog.close();
         },
 
+        /**
+         * Retrieves the i18n resource bundle for translation lookups.
+         * @private
+         * @returns {sap.base.i18n.ResourceBundle} The resource bundle.
+         */
         _getBundle: function () {
             return this._i18nModel.getResourceBundle();
         },
-
     });
 });
